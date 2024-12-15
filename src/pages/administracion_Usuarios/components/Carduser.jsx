@@ -1,19 +1,31 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { store } from '../../../store/Ridux'
-import { getAllUsersThunk } from '../../../store/slices/AllUsers.slices'
+
 import { Card } from './Card'
+import { getAllUsersThunk } from '../../../store/Thunks/User.thunk'
+import { setAllusers } from '../../../store/slices/AllUsers.slices'
+
 
 
 
 export const Carduser = () => {
+  let AllUsers=[]
     const dispatch = useDispatch()
-    const AllUsers = useSelector((store)=> store.Allusers)
+     
+        AllUsers = useSelector((store)=> store.Allusers)
 
 
     useEffect(()=>{
-   dispatch(getAllUsersThunk())
-    },[])
+
+      const UserAll = async()=>{
+        AllUsers = await getAllUsersThunk()
+       console.log(AllUsers)
+       if(AllUsers.length > 0) dispatch(setAllusers(AllUsers))
+       }
+       UserAll()
+},[])
+
 
   return (  
       <div className="flex flex-wrap -mx-3 mb-5">

@@ -1,40 +1,70 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { useUser } from '../../hook/useuser'
+
 import { Navigate, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { PostUserThunks } from '../../store/slices/User.slices'
+import { setUsers } from '../../store/slices/User.slices'
+import Swal from 'sweetalert2'
+import { LoginUserThunk, PostUserThunks } from '../../store/Thunks/User.thunk'
 
 export const Login = () => {
   const {handleSubmit,register,reset} = useForm()
-  const [getLoginUser, ErrorUser ] = useUser()
-  const [ mailIsvalid, setmailIsvalid]=useState(true)
+  
+  
+
  
 const navigate= useNavigate()
 const dispatch= useDispatch()
+
+
+useEffect(()=>{
+
+},[])
 
 const Submit = async (data,e)=>{
   e.preventDefault()
  
                 let emailOnchange = /^[-\w.%+]{1,64}@(?:[A-Z0-9-]{1,63}\.){1,125}[A-Z]{2,63}$/i;
                   //Se muestra un texto a modo de ejemplo, luego va a ser un icono
-                  if(!emailOnchange.test(data.email)) setmailIsvalid(false) 
-                 const Respuesta = await getLoginUser(data)            
-              
+                  if(!emailOnchange.test(data.email)) return Swal.fire("Credenciales no Validas")
+                const Result = await LoginUserThunk (data) 
+                console.log(Result)
+                 if(Result?.message){
+                  return Swal.fire({
+                    title: Result.message,
+                    showClass: {
+                      popup: `
+                        animate__animated
+                        animate__fadeInUp
+                        animate__faster
+                      `
+                    },
+                    hideClass: {
+                      popup: `
+                        animate__animated
+                        animate__fadeOutDown
+                        animate__faster
+                      `
+                    }
+                  });                 
+                }else{
                   reset({
                         email:"",
                         password:""
                       })
     
                const result = await localStorage.getItem('token')
-               if(result)  dispatch(PostUserThunks())
-                if(ErrorUser) setmailIsvalid(false)                
+               const Validadcion = await PostUserThunks()
+                   
+               if(Validadcion.first_Name) dispatch(setUsers(Validadcion))
+                 
+                              
                if(result){
                  return  navigate('/home')
                }
                
             }       
-             
+}   
 const Validar = () =>{
   setmailIsvalid(true)
 }
@@ -67,13 +97,6 @@ const Validar = () =>{
             <a href="#" className="hover:underline">Sign up Here</a>
           </div>
 
-          {
-          (!mailIsvalid) &&
-          <div className="mt-6 text-red-500 text-center">
-            <a href="#" className="hover:underline">Password or email invalidos</a>
-          </div>
-
-          }
           
         </div>
         

@@ -11,23 +11,29 @@ const Users = createSlice({
     initialState:[],
     reducers:{
         setUsers:(_state,actions)=>actions.payload,
-        setCreateusers:(state,{payload}) =>{[state, payload]},
-       
+        setCreateusers:(state, { payload } ) =>{[state, payload]},
+       // setUpdateUsers:(state, { payload } )=>[...state].forEach((items)=>{ (items.email === payload.email) ?  payload :items })
 
     }
 
 })
 
-export const { setUsers, setCreateusers, setAllusers } = Users.actions;
+export const { setUsers, setCreateusers, setAllusers, setUpdateUsers } = Users.actions;
 export default Users.reducer;
 
 
-export const PostUserThunks = () => (dispach)=>{
-        axios.get(`${Ruta}/users/me`,BearerToken())
-       .then(resp => dispach(setUsers(resp.data)))
-       .catch(error => console.log(error))  
-    }
+export const PostUserThunks = async () =>{
 
+        
+       try{
+         return await axios.get(`${Ruta}/users/me`,BearerToken())
+          .then(resp => resp.data)
+
+       }catch(error){
+        return (error.response?.data || error.message)   
+        }
+    }
+ 
  export const CreateUserThunk = (datos)=>(dispach)=>{
     
     try{

@@ -2,7 +2,10 @@ import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useDispatch } from 'react-redux'
 import Swal from 'sweetalert2'
-import { getAllUsersThunk, putUsersThunk } from '../../../store/slices/AllUsers.slices'
+import { UploadImg } from '../../../util/Cloud'
+import { getAllUsersThunk, putUsersThunk } from '../../../store/Thunks/User.thunk'
+import { setUpdateUsers } from '../../../store/slices/User.slices'
+import { setAllusers } from '../../../store/slices/AllUsers.slices'
 
 export const FormUpdate = ({info,  setIsActive, IsActive }) => {
     const { handleSubmit, register, reset } = useForm()
@@ -10,6 +13,7 @@ const dispatch = useDispatch()
     const [IsValid ,setIsValid] = useState(true)
     const[Valid,setValid]=useState()
     const[ ChangeRadio, setChangeRadio ] = useState()
+    const [ FotoPerfil, SetFotoPerfil ] = useState()
   const [ Comparation, setComparation ]=useState({
     password:'',
     password1:''
@@ -46,29 +50,42 @@ const dispatch = useDispatch()
 const HandleCloset = () =>{
     setIsActive(false)
 }
+//foto de perfil
+const HandleImage = async(event) =>{
+    const foto = await UploadImg(event.target.files)
+    SetFotoPerfil(foto)
+}
 
 useEffect(()=>{
  if(IsActive){
     reset(info)
  }
- dispatch(getAllUsersThunk())
+  const UpdateUsers = async() =>{
+      const UpdateUser = await getAllUsersThunk()
+      if(UpdateUser) dispatch(setAllusers(UpdateUser))
+  }
+UpdateUsers()
+
 },[IsActive])
 
-const onUpdatesubmit = async(data)=>{
-if(!data.password){
-     delete data.password; 
-     delete data.password1;    
-}else{
-    delete data.password1;
-    
-} 
- if(ChangeRadio)  data.tipo = ChangeRadio 
- 
-const datos = await dispatch(putUsersThunk(data))
-console.log(datos)
-Swal.fire('Datos Actualizados')
-setIsActive(false)
-}
+    const onUpdatesubmit = async(data)=>{
+            if(!data.password){
+                delete data.password; 
+                delete data.password1;    
+            }else{
+                delete data.password1;
+                
+            } 
+            if(ChangeRadio)  data.tipo = ChangeRadio 
+            data.imagen = FotoPerfil;
+            const datos = await putUsersThunk(data)
+           
+            Swal.fire({
+                icon:"success",
+                title:datos.message
+            })
+            setIsActive(false)
+    }
 
   return (  
           
@@ -99,6 +116,10 @@ setIsActive(false)
                 <div className="mb-4">
                     <input {...register('cargo',{ required:"Campo Cargo requerido" , minLength:3 })} type="text" name="cargo" placeholder="Cargo" className="border p-2 rounded w-full"/>
                 </div>
+
+                <label htmlFor="coccion" className="block text-gray-600 mb-4">Seleccione foto</label>
+                <input type="file" className='relative peer h-full w-full rounded-[7px] border border-blue-gray-200 bg-transparent px-3 py-2.5 pr-20 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 focus:border-4| focus:border-red-500 focus:border-t-transparent focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50 mb-4' onChange={HandleImage} name='imagen' placeholder='Upload Imagen' accept='.jpg, .png, .jpeg'/>
+
 
                 <div className="flex mb-4 gap-x-6">
                  <p className='text-white'>Tipo de Usuario:</p>

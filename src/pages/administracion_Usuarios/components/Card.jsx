@@ -19,7 +19,7 @@ const Actualizar = () =>{
     <>
         <div className="flex  static flex-col mr-5 text-center mb-11 lg:mr-16 border-2 p-3 rounded-lg">
                   <div className="inline-block mb-4 relative shrink-0 rounded-[.95rem]">
-                    <img className="inline-block shrink-0 rounded-[.95rem] w-[100px] h-[100px]" src="https://raw.githubusercontent.com/Loopple/loopple-public-assets/main/riva-dashboard-tailwind/img/avatars/avatar11.jpg" alt="avarat image"/>
+                    <img className="inline-block shrink-0 rounded-[.95rem] w-[100px] h-[100px]" src={items.imagen}alt="avarat image"/>
                   </div>
                   <div className="text-center">
                     <a href="javascript:void(0)" className="text-dark font-semibold hover:text-primary text-[1.25rem] transition-colors duration-200 ease-in-out">{items.first_Name +" "+ items.last_Name}</a>

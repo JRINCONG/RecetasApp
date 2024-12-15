@@ -6,26 +6,31 @@ import { PostUserThunks } from '../../../store/slices/User.slices';
 import Swal from 'sweetalert2';
 import { outer } from '@cloudinary/url-gen/qualifiers/outlineMode';
 
-export const LinkLogin = ({setLogoutoff}) => {
+export const Logout = ({setLogoutoff}) => {
   const dispatch=useDispatch()  
   const navigate = useNavigate()  
   let Userme = useSelector((store)=> store.Users)
- const [Logout, setLogout] = useState(true)
+ const [LogoutUser, setLogoutUser] = useState(true)
   const session = localStorage.getItem('token')
  
       useEffect(()=>{
-          
-          if(session) {            
-            dispatch(PostUserThunks()) 
+          const resolve = async() =>{
+            if(session) {            
+              const results = await PostUserThunks()
+            }
+
           }
+          resolve()
          
-      },[Logout]) 
+      },[LogoutUser]) 
       
     const CerrarSession = () =>{
          if(session){
-          Swal.fire('logout successfully')
            localStorage.removeItem('token')           
-          setLogout(false)         
+          setLogoutUser(false) 
+          setTimeout((session)=>{
+            Swal.fire('logout successfully')
+          },2000)        
            navigate('/login')
            setLogoutoff(true) 
            window.location.reload(true)          
@@ -35,7 +40,7 @@ export const LinkLogin = ({setLogoutoff}) => {
           }
         }
   return (
-    <div onClick ={CerrarSession} className="w-full px-2 inline-flex space-x-2 items-center border-b border-slate-700 py-3 bg-red-500 hover:bg-white/5 transition ease-linear duration-150 hover:cursor-pointer">
+    <div onClick ={CerrarSession} className={`w-full px-2 inline-flex space-x-2 items-center border-b border-slate-700 py-3 ${(!session) ? 'bg-blue-800':'bg-red-500'} hover:bg-white/5 transition ease-linear duration-150 hover:cursor-pointer`}>
                 <div>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6 text-white">
                     <IoIosLogIn />

@@ -1,6 +1,8 @@
 import { createSlice, isAction } from "@reduxjs/toolkit";
 import axios from "axios";
 import { BearerToken } from "../../util/BearerToken";
+import { use } from "react";
+import { useDispatch } from "react-redux";
 
 
 const Ruta = import.meta.env.VITE_API_URL;
@@ -10,7 +12,7 @@ const Users = createSlice({
     name:"Users",
     initialState:[],
     reducers:{
-        setUsers:(_state,actions)=>actions.payload,
+        setUsers:(_state,actions)=> actions.payload.datos,
         setCreateusers:(state, { payload } ) =>{[state, payload]},
        // setUpdateUsers:(state, { payload } )=>[...state].forEach((items)=>{ (items.email === payload.email) ?  payload :items })
 
@@ -22,11 +24,12 @@ export const { setUsers, setCreateusers, setAllusers, setUpdateUsers } = Users.a
 export default Users.reducer;
 
 
-export const PostUserThunks = async () =>{
+
+export const PostUsermeThunks = async () =>{
 
         
        try{
-         return await axios.get(`${Ruta}/users/me`,BearerToken())
+         return await axios.get(`${Ruta}/users/me`,{withCredentials:true})
           .then(resp => resp.data)
 
        }catch(error){

@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react'
 import { Link, Navigate, useNavigate } from 'react-router-dom'
 import { IoIosLogIn } from "react-icons/io";
 import { useDispatch, useSelector } from 'react-redux';
-import { PostUserThunks } from '../../../store/slices/User.slices';
 import Swal from 'sweetalert2';
 import { outer } from '@cloudinary/url-gen/qualifiers/outlineMode';
+import { PostUsermeThunks } from '../../../store/slices/User.slices';
 
 export const Logout = ({setLogoutoff}) => {
   const dispatch=useDispatch()  
@@ -16,7 +16,7 @@ export const Logout = ({setLogoutoff}) => {
       useEffect(()=>{
           const resolve = async() =>{
             if(session) {            
-              const results = await PostUserThunks()
+              const results = await PostUsermeThunks()
             }
 
           }
@@ -28,8 +28,11 @@ export const Logout = ({setLogoutoff}) => {
          if(session){
            localStorage.removeItem('token')           
           setLogoutUser(false) 
-          setTimeout((session)=>{
-            Swal.fire('logout successfully')
+          const valor =
+          setTimeout(async(session)=>{
+            const result = await PostLogoutThunk()
+            console.log("logout",result)
+            Swal.fire(`${result.message}`)
           },2000)        
            navigate('/login')
            setLogoutoff(true) 

@@ -1,27 +1,43 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, Navigate, useNavigate } from 'react-router-dom'
-import { PostUserThunks, setUsers } from '../../store/slices/User.slices'
+import { PostUsermeThunks, setUsers } from '../../store/slices/User.slices'
 import {Menuadmin} from './components/Menuadmin'
 import { Perfil } from './components/Perfil'
 
 import { Logout } from './components/Logout'
 import Swal from 'sweetalert2'
+import { store } from '../../store/Ridux'
 
 
-export const Navbar = () => {
+export const Navbar = ({Load}) => {
 
-const [Logoutoff, setLogoutoff ]= useState(false)   
+const [Logoutoff, setLogoutoff ]= useState(false)  
+
 const navigate = useNavigate()
-const dispatch=useDispatch()   
+const dispatch = useDispatch()   
 
-let Userme = useSelector((store)=> store.Users)
+let Userme = useSelector((store)=>store.Users)
 const session = localStorage.getItem('token')
+console.log("session navbar",session)
 
-    useEffect(()=>{     
+useEffect(()=>{
+  const Validate= async()=>{
+    if(session){
+      const result = await PostUsermeThunks()
+      dispatch(setUsers(result.datos))
+
+    }
+  }
+  Validate()
+},[])
+
+  
+
+    useEffect(()=>{   
     const resolve = async()=>{
       if(session){          
-        const results = await PostUserThunks()
+        const results = await PostUsermeThunks()
         if(results === 'Forbidden'){
           Swal.fire('Session expirada')
            localStorage.removeItem('token')
@@ -49,7 +65,6 @@ const session = localStorage.getItem('token')
             <p className="text-slate-500 text-sm">Manejo de recetas e inventarios </p>
            </div>
            
-
            <Perfil
            username={Userme}
            Logoutoff={Logoutoff}

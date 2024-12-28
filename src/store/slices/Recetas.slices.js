@@ -26,7 +26,7 @@ const Ruta = import.meta.env.VITE_API_URL;
 export const getRecetasThunk = () => async(dispach) =>{
 
     try{
-       await axios.get(`${Ruta}/recetas`,BearerToken())
+       await axios.get(`${Ruta}/recetas`)
         .then(resp => {
             dispach(setGetAll(resp.data))})
     }catch(error){

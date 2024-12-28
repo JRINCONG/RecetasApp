@@ -7,7 +7,6 @@ import { DataObjectSharp } from '@mui/icons-material'
 import Swal from 'sweetalert2'
 
 
-
 export const Recetas = () => {
     const {handleSubmit, reset, register} = useForm()
     const dispatch=useDispatch()  
@@ -17,7 +16,8 @@ export const Recetas = () => {
     const  recetas= useSelector((store) => store.Recetas)
 
 useEffect(()=>{
-    dispatch(getRecetasThunk())
+ dispatch(getRecetasThunk())
+    
 },[Status])
 
     console.log("recetas",recetas)
@@ -75,7 +75,7 @@ console.log(Respuesta.Data)
   
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
           <div className="mb-4">
-          <label htmlFor="name" className="block text-gray-600">Nombre Receta</label>
+          <label htmlFor="name" className="block text-white">Nombre Receta</label>
             <input
             {...register('name')}
           type="text"
@@ -87,12 +87,12 @@ console.log(Respuesta.Data)
         />
           </div>
           <div className="mb-4">
-          <label htmlFor="preparacion" className="block text-gray-600">Tiempo Preparación</label>        
+          <label htmlFor="preparacion" className="block text-white">Tiempo Preparación</label>        
           <input {...register('T_preparacion')} type="time" name="T_preparacion" className='w-full px-3 py-2 dark:bg-gray-900'/>
           </div>
          
           <div className='mb4'> 
-          <label htmlFor="coccion" className="block text-gray-600">Tiempo Cocción</label>        
+          <label htmlFor="coccion" className="block text-white">Tiempo Cocción</label>        
           <input  {...register('T_coccion')}type="time" name="T_coccion" className='w-full px-3 py-2 dark:bg-gray-900'/>
           </div>
           </div>

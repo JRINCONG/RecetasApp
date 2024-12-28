@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-
+import Cookies from 'js-cookie'
 import { Navigate, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { setUsers } from '../../store/slices/User.slices'
+import { PostUsermeThunks, setUsers } from '../../store/slices/User.slices'
 import Swal from 'sweetalert2'
-import { LoginUserThunk, PostUserThunks } from '../../store/Thunks/User.thunk'
+import { LoginUserThunk, PostUserThunks } from '../../store/Thunks/User.Thunk'
 
-export const Login = () => {
+export const Login = ({setLoad}) => {
   const {handleSubmit,register,reset} = useForm()
-  
+  const [UserAuto, setUserAuto ] = useState(false)
   
 
  
@@ -17,9 +17,7 @@ const navigate= useNavigate()
 const dispatch= useDispatch()
 
 
-useEffect(()=>{
 
-},[])
 
 const Submit = async (data,e)=>{
   e.preventDefault()
@@ -28,7 +26,6 @@ const Submit = async (data,e)=>{
                   //Se muestra un texto a modo de ejemplo, luego va a ser un icono
                   if(!emailOnchange.test(data.email)) return Swal.fire("Credenciales no Validas")
                 const Result = await LoginUserThunk (data) 
-                console.log(Result)
                  if(Result?.message){
                   return Swal.fire({
                     title: Result.message,
@@ -53,11 +50,14 @@ const Submit = async (data,e)=>{
                         password:""
                       })
     
+              
+               
+               const Validadcion = await PostUsermeThunks()
+               if(Validadcion) localStorage.setItem('token',Validadcion.token)
+                console.log(Validadcion.datos)
+                setLoad(true)
                const result = await localStorage.getItem('token')
-               const Validadcion = await PostUserThunks()
-                   
-               if(Validadcion.first_Name) dispatch(setUsers(Validadcion))
-                 
+               if(Validadcion.datos.first_Name) dispatch(setUsers(Validadcion))
                               
                if(result){
                  return  navigate('/home')

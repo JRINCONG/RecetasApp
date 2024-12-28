@@ -6,6 +6,7 @@ export const Perfil = ({username, Logoutoff }) => {
 const [isValidPerfil, setIsValidPerfil ] = useState(false) 
 const conexion = localStorage.getItem('token')
 
+console.log("username",username)
  useEffect(()=>{
   if(conexion){
    

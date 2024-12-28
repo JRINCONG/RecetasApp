@@ -1,8 +1,9 @@
+import cookies from 'js-cookie'
 export const BearerToken = () =>{
 
 
-    const token = localStorage.getItem('token')
-    
+    const token = cookies.get('Recetas')
+    console.log(token)
     return{
         headers: {
             Authorization: `Bearer ${token}`

@@ -1,5 +1,8 @@
 import axios from "axios";
-import { BearerToken } from "../../util/BearerToken";
+import  { BearerToken } from "../../util/BearerToken";
+import { get } from "react-hook-form";
+import api from "../../util/api";
+
 
 
 
@@ -7,14 +10,12 @@ import { BearerToken } from "../../util/BearerToken";
 const Ruta = import.meta.env.VITE_API_URL;
 
 export const LoginUserThunk = async(data) =>{
-   
+    console.log(data)
     try{
 
-       return await axios.post(`${Ruta}/users/login`,data)
-        .then(resp =>{
-            localStorage.setItem('token',resp.data.token)
-        })
-
+       return await axios.post(`${Ruta}/users/login`,data,{withCredentials:true})
+        .then(resp => console.log("ya funciona",resp.data) )
+          
     }catch(error){
         return  error.response?.data || error.message  
     }
@@ -36,7 +37,7 @@ export const getAllUsersThunk = async() => {
 
         
     try{
-      return await axios.get(`${Ruta}/users/me`,BearerToken())
+      return await api.get(`${Ruta}/users/me`)
        .then(resp => resp.data)
 
     }catch(error){
@@ -66,3 +67,25 @@ export const getAllUsersThunk = async() => {
     }
 
  }
+
+
+
+ export const PostLogoutThunk = async()=>{
+    
+
+    try{
+      return  await axios.get(`${Ruta}/users/logout`)
+        .then(resp => console.log(resp.data))
+
+    }catch(error){
+        return (error.response?.data || error.message) 
+    }
+      
+            
+      
+    
+  
+
+
+ }
+ 
